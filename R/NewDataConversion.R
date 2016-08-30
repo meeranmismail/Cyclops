@@ -332,25 +332,25 @@ convertToCyclopsData.data.frame <- function(outcomes,
             if (!isSorted(covariates,c("covariateId", "stratumId","rowId"))){
                 if(!quiet)
                     writeLines("Sorting covariates by covariateId, stratumId, and rowId")
-                covariates <- covariates[order(covariates$covariateId, covariates$stratumId,covariates$rowId),]
+                covariates <- covariates[order(covariates$covariateId, covariates$stratumId, covariates$rowId),]
             }
         }
         if (modelType == "cox"){
-            if (!isSorted(outcomes,c("stratumId", "time", "y", "rowId"),c(TRUE, FALSE, TRUE, TRUE))){
+            if (!isSorted(outcomes,c("stratumId", "endtime", "y", "rowId"),c(TRUE, FALSE, TRUE, TRUE))){
                 if(!quiet)
-                    writeLines("Sorting outcomes by stratumId, time (descending), y and rowId")
-                outcomes <- outcomes[order(outcomes$stratumId, -outcomes$time, outcomes$y, outcomes$rowId),]
+                    writeLines("Sorting outcomes by stratumId, end-time (descending), y and rowId")
+                outcomes <- outcomes[order(outcomes$stratumId, -outcomes$endtime, outcomes$y, outcomes$rowId),]
             }
-            if (is.null(covariates$time)) {
-                covariates$time <- NULL
+            if (is.null(covariates$endtime)) {
+                covariates$endtime <- NULL
                 covariates$y <- NULL
                 covariates$stratumId <- NULL
                 covariates <- merge(covariates, outcomes, by = c("rowId"))
             }
-            if (!isSorted(covariates, c("covariateId", "stratumId", "time", "y", "rowId"), c(TRUE, TRUE, FALSE, TRUE, TRUE))){
+            if (!isSorted(covariates, c("covariateId", "stratumId", "endtime", "y", "rowId"), c(TRUE, TRUE, FALSE, TRUE, TRUE))){
                 if(!quiet)
-                    writeLines("Sorting covariates by covariateId, stratumId, time (descending), y, and rowId")
-                covariates <- covariates[order(covariates$covariateId, covariates$stratumId, -covariates$time, covariates$y, covariates$rowId),]
+                    writeLines("Sorting covariates by covariateId, stratumId, end-time (descending), y, and rowId")
+                covariates <- covariates[order(covariates$covariateId, covariates$stratumId, -covariates$endtime, covariates$y, covariates$rowId),]
             }
         }
     }
@@ -365,7 +365,7 @@ convertToCyclopsData.data.frame <- function(outcomes,
     }
     dataPtr <- createSqlCyclopsData(modelType = modelType)
 
-    loadNewSqlCyclopsDataY(dataPtr, outcomes$stratumId, outcomes$rowId, outcomes$y, outcomes$time)
+    loadNewSqlCyclopsDataY(dataPtr, outcomes$stratumId, outcomes$rowId, outcomes$y, outcomes$starttime, outcomes$endtime)
 
     if (addIntercept & modelType != "cox")
         loadNewSqlCyclopsDataX(dataPtr, 0, NULL, NULL, name = "(Intercept)")
