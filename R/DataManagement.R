@@ -711,7 +711,8 @@ loadNewSqlCyclopsDataY <- function(object,
                                    stratumId = NULL,
                                    rowId = NULL,
                                    y,
-                                   time = NULL) {
+                                   starttime = NULL,
+                                   endtime = NULL) {
     if (!isInitialized(object)) {
         stop("Object is no longer or improperly initialized.")
     }
@@ -723,16 +724,18 @@ loadNewSqlCyclopsDataY <- function(object,
         stop("All columns must be sorted first by stratumId (if supplied) and then by rowId")
     }
 
-    if (is.null(time)) {
-        if (.isSurvivalModelType(object$modelType)) stop("Must provide time for survival model")
-        time <- as.numeric(c())
+    if (is.null(starttime) || is.null(endtime)) {
+        if (.isSurvivalModelType(object$modelType)) stop("Must provide start and end time for survival model")
+        if (is.null(starttime)) starttime <- as.numeric(c())
+        if (is.null(endtime)) endtime <- as.numeric(c())
     }
 
     .loadCyclopsDataY(object,
                       stratumId,
                       rowId,
                       y,
-                      time)
+                      starttime,
+                      endtime)
 }
 
 
