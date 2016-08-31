@@ -461,11 +461,12 @@ void cyclopsLoadDataY(Environment x,
         const std::vector<int64_t>& stratumId,
         const std::vector<int64_t>& rowId,
         const std::vector<double>& y,
-        const std::vector<double>& time) {
+        const std::vector<double>& starttime
+        const std::vector<double>& endtime) {
 
     using namespace bsccs;
     XPtr<ModelData> data = parseEnvironmentForPtr(x);
-    data->loadY(stratumId, rowId, y, time);
+    data->loadY(stratumId, rowId, y, starttime, endtime);
 }
 
 // [[Rcpp::export(".loadCyclopsDataMultipleX")]]
